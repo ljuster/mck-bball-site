@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   resources :events
 
   namespace :api do
-    resources :users
+    resources :users do
+      collection do
+        delete :destroy
+      end
+    end
     resources :events
   end
 

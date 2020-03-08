@@ -19,26 +19,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('MK', 305, 3.7, 67, 4.3),
-    createData('Matzah', 452, 25.0, 51, 4.9),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Honeycomb', 408, 3.2, 87, 6.5),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0),
-    createData('KitKat', 518, 26.0, 65, 7.0),
-    createData('Lollipop', 392, 0.2, 98, 0.0),
-    createData('Marshmallow', 318, 0, 81, 2.0),
-    createData('Nougat', 360, 19.0, 9, 37.0),
-    createData('Oreo', 437, 18.0, 63, 4.0),
-];
+import axios from 'axios'
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -68,8 +49,8 @@ function stableSort(array, comparator) {
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-    { id: 'calories', numeric: true, disablePadding: false, label: 'Email' },
-    { id: 'fat', numeric: true, disablePadding: false, label: 'Paid' },
+    { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
+    { id: 'paid', numeric: true, disablePadding: false, label: 'Paid' },
     { id: 'carbs', numeric: true, disablePadding: false, label: 'blabla' },
     { id: 'protein', numeric: true, disablePadding: false, label: 'mamaciata' },
 ];
@@ -139,7 +120,7 @@ const useToolbarStyles = makeStyles(theme => ({
 
 const EnhancedTableToolbar = props => {
     const classes = useToolbarStyles();
-    const { numSelected } = props;
+    const { numSelected, handleDelete } = props;
 
     return (
         <Toolbar
@@ -159,7 +140,7 @@ const EnhancedTableToolbar = props => {
 
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={handleDelete}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
@@ -216,19 +197,19 @@ export default function Roster(props) {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelecteds = props.users.map(n => n.name);
+            const newSelecteds = props.users.map(n => n.email);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, email) => {
+        const selectedIndex = selected.indexOf(email);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, email);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -256,14 +237,24 @@ export default function Roster(props) {
         setDense(event.target.checked);
     };
 
-    const isSelected = name => selected.indexOf(name) !== -1;
+    const handleDelete = (e) => {
+        axios.delete(`/api/users`, {
+            params: { users: selected }
+        })
+        .then(function (response) {
+            debugger
+            alert("Deleted")
+        });
+    }
+
+    const isSelected = email => selected.indexOf(email) !== -1;
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, users.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} handleDelete={handleDelete} />
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -284,17 +275,17 @@ export default function Roster(props) {
                             {stableSort(users, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((user, index) => {
-                                    const isItemSelected = isSelected(user.name);
+                                    const isItemSelected = isSelected(user.email);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, user.name)}
+                                            onClick={event => handleClick(event, user.email)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={user.name}
+                                            key={user.email}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
@@ -304,7 +295,7 @@ export default function Roster(props) {
                                                 />
                                             </TableCell>
                                             <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                {user.name}
+                                                {user.email}
                                             </TableCell>
                                             <TableCell align="right">{user.email}</TableCell>
                                         </TableRow>

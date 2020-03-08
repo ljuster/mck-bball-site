@@ -8,6 +8,7 @@ import NewUserForm from "./NewUserForm.jsx"
 
 export default function RosterContainer(props) {
     const [showCreateUserForm, setShowCreateUserForm] = React.useState(false);
+    const [users, setUsers] = React.useState(props.users);
 
     const handleClick = (event) => {
         setShowCreateUserForm(true)
@@ -16,8 +17,8 @@ export default function RosterContainer(props) {
     return (
         <Box>
             <Button variant="contained" color="primary" onClick={event => handleClick(event)}>Add User</Button>
-            {showCreateUserForm && <NewUserForm />}
-            <Roster users={props.users} />
+            {showCreateUserForm && <NewUserForm setUsers={setUsers} />}
+            <Roster users={users} />
         </Box>
     );
 }

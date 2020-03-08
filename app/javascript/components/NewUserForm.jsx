@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios"
+import { get } from "lodash"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,7 +19,6 @@ const useStyles = makeStyles(theme => ({
 export default function NewUserForm(props){
     const [name, setName] = React.useState(null);
     const [email, setEmail] = React.useState(null);
-    const [showCreateUserForm, setShowCreateUserForm] = React.useState(true);
     const [errors, setErrors] = React.useState(null);
     const [successMessage, setSuccessMessage] = React.useState(null);
 
@@ -37,23 +37,23 @@ export default function NewUserForm(props){
             email: email,
             name: name
         })
-            .then(function (response) {
-                setSuccessMessage(response.data);
-                setShowCreateUserForm(false);
-            });
+        .then(function (response) {
+            debugger
+            setSuccessMessage(`User ${response.data.name} created`);
+        });
     };
 
     return (
         <Container>
-        {showCreateUserForm && <Paper elevation={3}>
+        <Paper elevation={3}>
         <form className={classes.root} noValidate autoComplete="off">
             <div><TextField id="name" label="name" onChange={e => handleChange(e)} /></div>
             <div><TextField id="email" label="email" variant="filled" onChange={e => handleChange(e)} /></div>
             <Button variant="contained" color="primary" onClick={event => handleSubmit(event)}>Submit</Button>
         </form>
-        </Paper>}
+        </Paper>
         {errors && <p>{errors}</p>}
-        {successMessage && <p>{successMessage.to_json}</p>}
+        {successMessage && <p>{successMessage}</p>}
         </Container >
     );
 }
