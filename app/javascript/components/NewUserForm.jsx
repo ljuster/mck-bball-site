@@ -18,6 +18,9 @@ const useStyles = makeStyles(theme => ({
 export default function NewUserForm(props){
     const [name, setName] = React.useState(null);
     const [email, setEmail] = React.useState(null);
+    const [showCreateUserForm, setShowCreateUserForm] = React.useState(true);
+    const [errors, setErrors] = React.useState(null);
+    const [successMessage, setSuccessMessage] = React.useState(null);
 
     const classes = useStyles();
 
@@ -29,15 +32,28 @@ export default function NewUserForm(props){
         }
     }
 
+    const handleSubmit = (event) => {
+        axios.post(`/api/users`, {
+            email: email,
+            name: name
+        })
+            .then(function (response) {
+                setSuccessMessage(response.data);
+                setShowCreateUserForm(false);
+            });
+    };
+
     return (
         <Container>
-        <Paper elevation={3}>
+        {showCreateUserForm && <Paper elevation={3}>
         <form className={classes.root} noValidate autoComplete="off">
             <div><TextField id="name" label="name" onChange={e => handleChange(e)} /></div>
-            <div><TextField id="email" abel="email" variant="filled" onChange={e => handleChange(e)} /></div>
-                    <Button variant="contained" color="primary" onClick={event => props.handleSubmit(event)}>Submit</Button>
+            <div><TextField id="email" label="email" variant="filled" onChange={e => handleChange(e)} /></div>
+            <Button variant="contained" color="primary" onClick={event => handleSubmit(event)}>Submit</Button>
         </form>
-        </Paper>
-        </Container>
+        </Paper>}
+        {errors && <p>{errors}</p>}
+        {successMessage && <p>{successMessage.to_json}</p>}
+        </Container >
     );
 }
