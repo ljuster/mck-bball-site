@@ -6,6 +6,6 @@ import RosterContainer from '../components/RosterContainer.jsx';
 document.addEventListener('DOMContentLoaded', () => {
     const node = document.getElementById("root")
     const data = JSON.parse(node.getAttribute("data"))
-    ReactDOM.render(<RosterContainer />, document.getElementById("root"));
+    ReactDOM.render(<RosterContainer users={data} />, document.getElementById("root"));
 }
 )

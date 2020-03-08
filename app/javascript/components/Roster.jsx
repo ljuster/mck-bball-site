@@ -67,9 +67,9 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'you cool' },
-    { id: 'calories', numeric: true, disablePadding: false, label: 'congrats' },
-    { id: 'fat', numeric: true, disablePadding: false, label: 'shweet' },
+    { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+    { id: 'calories', numeric: true, disablePadding: false, label: 'Email' },
+    { id: 'fat', numeric: true, disablePadding: false, label: 'Paid' },
     { id: 'carbs', numeric: true, disablePadding: false, label: 'blabla' },
     { id: 'protein', numeric: true, disablePadding: false, label: 'mamaciata' },
 ];
@@ -198,7 +198,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Roster() {
+export default function Roster(props) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -206,6 +206,7 @@ export default function Roster() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [users, setUsers] = React.useState(props.users);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -215,7 +216,7 @@ export default function Roster() {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelecteds = rows.map(n => n.name);
+            const newSelecteds = props.users.map(n => n.name);
             setSelected(newSelecteds);
             return;
         }
@@ -257,7 +258,7 @@ export default function Roster() {
 
     const isSelected = name => selected.indexOf(name) !== -1;
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, users.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
@@ -277,23 +278,23 @@ export default function Roster() {
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={users.length}
                         />
                         <TableBody>
-                            {stableSort(rows, getComparator(order, orderBy))
+                            {stableSort(users, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
+                                .map((user, index) => {
+                                    const isItemSelected = isSelected(user.name);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row.name)}
+                                            onClick={event => handleClick(event, user.name)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.name}
+                                            key={user.name}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
@@ -303,12 +304,9 @@ export default function Roster() {
                                                 />
                                             </TableCell>
                                             <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                {row.name}
+                                                {user.name}
                                             </TableCell>
-                                            <TableCell align="right">{row.calories}</TableCell>
-                                            <TableCell align="right">{row.fat}</TableCell>
-                                            <TableCell align="right">{row.carbs}</TableCell>
-                                            <TableCell align="right">{row.protein}</TableCell>
+                                            <TableCell align="right">{user.email}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -323,7 +321,7 @@ export default function Roster() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={users.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
