@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :events
+
+  namespace :api do
+    resources :users
+    resources :events
+  end
+
   root 'welcome#index'
   get 'welcome/index'
 

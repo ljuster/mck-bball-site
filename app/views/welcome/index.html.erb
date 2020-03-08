@@ -1,13 +1,7 @@
-<h1>hello Mary, Mary Kate</h1>
+<h1>Pan Pacific</h1>
 
-<div id="root" data="<%= [{name: 'pl1'}, {name: 'pl2'}].to_json %>"></div>
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+<div id="root" data="<%= @users.to_json %>"></div>
 <%= javascript_pack_tag 'application' %>
 
-<button id="say_hello_button" value='Press Me MK' class='ui button'>Press me MK</button>
-  <script type="text/javascript" >
-      var sayHello = function() {
-          alert("Wassup arm candy")
-      }
-
-      $('#say_hello_button').on('click', sayHello);
-  </script>

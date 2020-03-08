@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -26,8 +25,8 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Donut', 452, 25.0, 51, 4.9),
+    createData('MK', 305, 3.7, 67, 4.3),
+    createData('Matzah', 452, 25.0, 51, 4.9),
     createData('Eclair', 262, 16.0, 24, 6.0),
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
     createData('Gingerbread', 356, 16.0, 49, 3.9),
@@ -68,11 +67,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-    { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-    { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-    { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-    { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+    { id: 'name', numeric: false, disablePadding: true, label: 'you cool' },
+    { id: 'calories', numeric: true, disablePadding: false, label: 'congrats' },
+    { id: 'fat', numeric: true, disablePadding: false, label: 'shweet' },
+    { id: 'carbs', numeric: true, disablePadding: false, label: 'blabla' },
+    { id: 'protein', numeric: true, disablePadding: false, label: 'mamaciata' },
 ];
 
 function EnhancedTableHead(props) {
@@ -118,16 +117,6 @@ function EnhancedTableHead(props) {
     );
 }
 
-EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-};
-
 const useToolbarStyles = makeStyles(theme => ({
     root: {
         paddingLeft: theme.spacing(2),
@@ -164,7 +153,7 @@ const EnhancedTableToolbar = props => {
         </Typography>
             ) : (
                     <Typography className={classes.title} variant="h6" id="tableTitle">
-                        Nutrition
+                        Gals
         </Typography>
                 )}
 
@@ -183,10 +172,6 @@ const EnhancedTableToolbar = props => {
                 )}
         </Toolbar>
     );
-};
-
-EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles(theme => ({
@@ -213,7 +198,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function EnhancedTable() {
+export default function Roster() {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
